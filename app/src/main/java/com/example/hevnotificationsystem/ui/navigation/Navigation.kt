@@ -1,0 +1,68 @@
+package com.example.hevnotificationsystem.ui.navigation
+
+import androidx.compose.animation.*
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import com.example.main.ui.MainScreen
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+
+@ExperimentalAnimationApi
+@Composable
+fun Navigation() {
+    BoxWithConstraints {
+        val navController = rememberAnimatedNavController()
+        AnimatedNavHost(
+            navController = navController,
+            startDestination = ScreensInspector.Main.route,
+            builder = {
+                mainScreenSetup(
+                    navController = navController,
+                    width = constraints.maxWidth / 2,
+                )
+            }
+        )
+    }
+}
+
+@ExperimentalAnimationApi
+fun NavGraphBuilder.mainScreenSetup(
+    navController: NavController,
+    width: Int,
+) {
+    composable(
+        route = ScreensInspector.Main.route,
+        exitTransition = {_, _ ->
+            slideOutHorizontally(
+                targetOffsetX = { -width },
+                animationSpec = tween(
+                    durationMillis = 300,
+                    easing = FastOutLinearInEasing
+                )
+            ) +
+            fadeOut(
+                animationSpec = tween(300)
+            )
+        },
+        popEnterTransition = { _, _ ->
+            slideInHorizontally(
+                initialOffsetX = { -width },
+                animationSpec = tween(
+                    durationMillis = 300,
+                    easing = FastOutSlowInEasing
+                )
+            ) +
+            fadeIn(
+                animationSpec = tween(300)
+            )
+        },
+    ) {
+        MainScreen()
+    }
+}
