@@ -32,6 +32,22 @@
             android:theme="@style/Theme.HEVNotificationSystem.Main">
         </activity>
 
+        <receiver
+            android:name="com.example.receivers.battery.BatteryReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.example.receivers.mute.ToggleMuteReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.VOLUME_CHANGED_ACTION" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

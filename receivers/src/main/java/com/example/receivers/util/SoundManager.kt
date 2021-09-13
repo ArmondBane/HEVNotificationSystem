@@ -4,7 +4,7 @@ import android.content.Context
 import android.media.MediaPlayer
 
 
-class AudioManager {
+class SoundManager {
 
     private var mediaPlayer: MediaPlayer? = null
 
