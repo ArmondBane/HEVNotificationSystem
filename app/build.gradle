@@ -51,7 +51,7 @@ android {
 
 dependencies {
 
-    implementation project(path: ':receivers')
+    implementation project(path: ':core')
     implementation project(path: ':presentation:main')
 
     implementation 'androidx.core:core-ktx:1.6.0'
@@ -61,7 +61,7 @@ dependencies {
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
-    implementation 'androidx.activity:activity-compose:1.4.0-alpha01'
+    implementation 'androidx.activity:activity-compose:1.4.0-alpha02'
 
     // Accompanist
     implementation "com.google.accompanist:accompanist-navigation-animation:0.16.0"

@@ -15,7 +15,7 @@ import com.google.accompanist.navigation.animation.composable
 
 @ExperimentalAnimationApi
 @Composable
-fun Navigation() {
+fun Navigation(exit: () -> Unit) {
     BoxWithConstraints {
         val navController = rememberAnimatedNavController()
         AnimatedNavHost(
@@ -23,6 +23,7 @@ fun Navigation() {
             startDestination = ScreensInspector.Main.route,
             builder = {
                 mainScreenSetup(
+                    exit = exit,
                     navController = navController,
                     width = constraints.maxWidth / 2,
                 )
@@ -33,6 +34,7 @@ fun Navigation() {
 
 @ExperimentalAnimationApi
 fun NavGraphBuilder.mainScreenSetup(
+    exit: () -> Unit,
     navController: NavController,
     width: Int,
 ) {
@@ -63,6 +65,6 @@ fun NavGraphBuilder.mainScreenSetup(
             )
         },
     ) {
-        MainScreen()
+        MainScreen(exit)
     }
 }

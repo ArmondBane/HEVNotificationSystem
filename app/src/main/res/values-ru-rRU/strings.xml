@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="app_name">H.E.V. Система оповещения</string>
+    <string name="h_e_v_notification_service_active">H.E.V. Система оповещения активна.</string>
 </resources>

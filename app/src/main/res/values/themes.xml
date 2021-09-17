@@ -27,9 +27,6 @@
     <style name="Theme.HEVNotificationSystem.Main" parent="Theme.HEVNotificationSystem.NoActionBar">
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
-    </style>
-
-    <style name="Theme.HEVNotificationSystem.Launcher" parent="Theme.HEVNotificationSystem">
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 

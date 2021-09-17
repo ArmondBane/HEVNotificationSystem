@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">HEV Notification System</string>
+    <string name="logo_icon" translatable="false">logo_icon</string>
+    <string name="h_e_v_notification_service_active">H.E.V. Notification Service active.</string>
 </resources>

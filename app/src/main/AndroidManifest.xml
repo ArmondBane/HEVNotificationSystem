@@ -3,6 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.hevnotificationsystem">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <application
         android:name=".MainApplication"
         android:allowBackup="false"
@@ -13,10 +17,11 @@
         android:theme="@style/Theme.HEVNotificationSystem">
 
         <activity
-            android:name=".activity.LauncherActivity"
+            android:name=".activity.MainActivity"
             android:exported="true"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/app_name"
-            android:theme="@style/Theme.HEVNotificationSystem.Launcher">
+            android:theme="@style/Theme.HEVNotificationSystem.Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,16 +29,13 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activity.MainActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.HEVNotificationSystem.Main">
-        </activity>
+        <service
+            android:name=".service.ReceiversService"
+            android:permission="android.permission.FOREGROUND_SERVICE"
+            android:enabled="true"/>
 
         <receiver
-            android:name="com.example.receivers.battery.BatteryReceiver"
+            android:name=".receiver.battery.BatteryReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BATTERY_CHANGED" />
@@ -41,7 +43,15 @@
         </receiver>
 
         <receiver
-            android:name="com.example.receivers.mute.ToggleMuteReceiver"
+            android:name=".receiver.battery.ChargeReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".receiver.mute.ToggleMuteReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.media.VOLUME_CHANGED_ACTION" />
