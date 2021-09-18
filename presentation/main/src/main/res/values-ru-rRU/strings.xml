@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">Добро пожаловать в H.E.V. систему оповещения</string>
+    <string name="warning">Для того чтобы система оповещения работала корректно, рекомендуется
+        убрать автоматическое управление программой в системных настройках, иначе система будет
+        закрывать систему оповещения через некоторое время.
+    </string>
+    <string name="battery_receiver">Оповещение уровня заряда</string>
+    <string name="charge_receiver">Оповещение подключения устройства к зарядке</string>
+    <string name="mute_receiver">Оповещение переключения звука</string>
+</resources>

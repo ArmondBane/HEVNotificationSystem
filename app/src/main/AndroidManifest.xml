@@ -4,8 +4,7 @@
     package="com.example.hevnotificationsystem">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".MainApplication"
@@ -32,31 +31,8 @@
         <service
             android:name=".service.ReceiversService"
             android:permission="android.permission.FOREGROUND_SERVICE"
-            android:enabled="true"/>
-
-        <receiver
-            android:name=".receiver.battery.BatteryReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BATTERY_CHANGED" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".receiver.battery.ChargeReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BATTERY_CHANGED" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".receiver.mute.ToggleMuteReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.media.VOLUME_CHANGED_ACTION" />
-            </intent-filter>
-        </receiver>
+            android:enabled="true">
+        </service>
 
     </application>
 

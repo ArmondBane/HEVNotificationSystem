@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">Welcome to H.E.V. Notification System</string>
+    <string name="warning">In order for the notification system to work correctly, it is
+        recommended to remove the automatic control of the program in the system settings,
+        otherwise the system will close the notification system after a while.
+    </string>
+    <string name="battery_receiver">Battery level alert</string>
+    <string name="charge_receiver">Device connection to charging alert</string>
+    <string name="mute_receiver">Sound switching alert</string>
+</resources>

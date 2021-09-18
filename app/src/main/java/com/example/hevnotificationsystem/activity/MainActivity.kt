@@ -30,7 +30,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun setSettings() {
-        startReceiversService()
+        if (!ReceiversService.isServiceRunning)
+            startReceiversService()
     }
 
     private fun startReceiversService() {
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
 
     private fun exitApplication() {
         val serviceIntent = Intent(applicationContext, ReceiversService::class.java)
+        ReceiversService.isServiceRunning = false
         stopService(serviceIntent)
         finish()
     }

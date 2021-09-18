@@ -25,16 +25,23 @@ class ToggleMuteReceiver: BroadcastReceiver() {
             context.getSystemService(Context.AUDIO_SERVICE) as SystemAudioManager
 
         when (systemAudioManager.ringerMode) {
-            SystemAudioManager.RINGER_MODE_NORMAL ->
-                audioManager.playSound(context, R.raw.voice_on)
-            SystemAudioManager.RINGER_MODE_SILENT ->
-                audioManager.playSound(context, R.raw.voice_off)
-            SystemAudioManager.RINGER_MODE_VIBRATE ->
-                audioManager.playSound(context, R.raw.voice_off)
+            SystemAudioManager.RINGER_MODE_NORMAL -> {
+                if (isSystemWasMute) {
+                    audioManager.playSound(context, R.raw.voice_on)
+                    isSystemWasMute = false
+                }
+            }
+            else -> {
+                if (!isSystemWasMute) {
+                    audioManager.playSound(context, R.raw.voice_off)
+                    isSystemWasMute = true
+                }
+            }
         }
     }
 
     companion object {
+        private var isSystemWasMute = true
         var audioManager: AudioManager? = null
     }
 }
