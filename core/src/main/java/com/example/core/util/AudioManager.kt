@@ -44,7 +44,7 @@ class AudioManager {
         mediaPlayer!!.start()
     }
 
-    fun stopSound() {
+    private fun stopSound() {
         if (mediaPlayer != null) {
             mediaPlayer!!.stop()
             mediaPlayer!!.release()
