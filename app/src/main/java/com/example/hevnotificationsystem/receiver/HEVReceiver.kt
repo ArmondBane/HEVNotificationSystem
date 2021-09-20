@@ -6,15 +6,11 @@ import com.example.core.data.local.RECEIVERS_KEY
 import com.google.gson.Gson
 import java.lang.Exception
 
-abstract class HEVReceiver {
+interface HEVReceiver {
 
-    abstract fun getReceiverKey(): String
+    fun getReceiverKey(): String
 
-    abstract fun getAppContext(): Context
-
-    init {
-        saveReceiver()
-    }
+    fun getAppContext(): Context
 
     private fun saveReceiver() {
         val sharedPreferences =
@@ -33,7 +29,7 @@ abstract class HEVReceiver {
 
         try {
             with(sharedPreferences.edit()) {
-                putString("p_$RECEIVERS_KEY", Gson().toJson(saveReceivers))
+                putString("p_$RECEIVERS_KEY", Gson().toJson(newSaveReceivers))
                 apply()
             }
         } catch (ex: Exception) {}

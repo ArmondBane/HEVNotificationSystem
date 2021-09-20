@@ -15,7 +15,7 @@ class MainViewModel @Inject constructor(
     private val userManager: UserManager
 ) :ViewModel(), LifecycleObserver {
 
-    val receivers = "TODO"
+    val receivers = userManager.receivers
 
     fun onToggleReceiver(receiver: UserManager.HEVReceiver) {
         userManager.toggleReceiver(receiver)

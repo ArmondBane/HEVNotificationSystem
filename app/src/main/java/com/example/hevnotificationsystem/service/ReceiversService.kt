@@ -27,15 +27,17 @@ class ReceiversService: Service() {
     private var timer: Timer? = null
     private var wakeLock: PowerManager.WakeLock? = null
 
-    private val batteryReceiver = BatteryReceiver().also {
-        BatteryReceiver.audioManager = audioManager
-    }
-    private val chargeReceiver = ChargeReceiver().also {
-        ChargeReceiver.audioManager = audioManager
-    }
-    private val toggleMuteReceiver = ToggleMuteReceiver().also {
-        ToggleMuteReceiver.audioManager = audioManager
-    }
+    private val receivers = arrayListOf(
+        BatteryReceiver().also {
+            BatteryReceiver.audioManager = audioManager
+        },
+        ChargeReceiver().also {
+            ChargeReceiver.audioManager = audioManager
+        },
+        ToggleMuteReceiver().also {
+            ToggleMuteReceiver.audioManager = audioManager
+        }
+    )
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -83,18 +85,21 @@ class ReceiversService: Service() {
 
     private fun registerReceivers() {
         applicationContext.apply {
-            registerReceiver(
-                batteryReceiver,
-                IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-            )
-            registerReceiver(
+            receivers.forEach { receiver ->
+                registerReceiver(
+                    receiver,
+                    IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+                )
+            }
+
+            /*registerReceiver(
                 chargeReceiver,
                 IntentFilter(Intent.ACTION_BATTERY_CHANGED)
             )
             registerReceiver(
                 toggleMuteReceiver,
                 IntentFilter(VOLUME_CHANGED_ACTION)
-            )
+            )*/
         }
     }
 
@@ -108,9 +113,9 @@ class ReceiversService: Service() {
         stopTimer()
 
         applicationContext.apply {
-            unregisterReceiver(batteryReceiver)
-            unregisterReceiver(chargeReceiver)
-            unregisterReceiver(toggleMuteReceiver)
+//            unregisterReceiver(batteryReceiver)
+//            unregisterReceiver(chargeReceiver)
+//            unregisterReceiver(toggleMuteReceiver)
         }
 
         if (isServiceRunning) {

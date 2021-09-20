@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.BatteryManager
 import com.example.core.util.AudioManager
 import com.example.hevnotificationsystem.R
+import com.example.hevnotificationsystem.receiver.HEVReceiver
 
 
 class BatteryReceiver: BroadcastReceiver() {

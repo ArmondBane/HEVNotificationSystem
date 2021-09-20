@@ -61,28 +61,32 @@ fun MainScreen(
                 }
             }
             Spacer(modifier = Modifier.padding(8.dp))
-            Card(
-                elevation = 8.dp,
-                backgroundColor = MaterialTheme.colors.secondary
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(20.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+            viewModel.receivers?.forEach { reseiver ->
+                val isReceiverOn = remember{ mutableStateOf(true) }
+                Card(
+                    elevation = 8.dp,
+                    backgroundColor = MaterialTheme.colors.secondary
                 ) {
-                    Text(
-                        modifier = Modifier.weight(5f),
-                        text = stringResource(id = R.string.battery_receiver)
-                    )
-                    Switch(
-                        modifier = Modifier.weight(1f),
-                        checked = isBatteryReceiverOn.value,
-                        onCheckedChange = { isBatteryReceiverOn.value = it }
-                    )
+                    Row(
+                        modifier = Modifier
+                            .padding(20.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            modifier = Modifier.weight(5f),
+                            text = stringResource(id = R.string.battery_receiver)
+                        )
+                        Switch(
+                            modifier = Modifier.weight(1f),
+                            checked = isReceiverOn.value,
+                            onCheckedChange = { isReceiverOn.value = it }
+                        )
+                    }
                 }
+                Spacer(modifier = Modifier.padding(8.dp))
             }
-            Spacer(modifier = Modifier.padding(8.dp))
+
             Card(
                 elevation = 8.dp,
                 backgroundColor = MaterialTheme.colors.secondary
