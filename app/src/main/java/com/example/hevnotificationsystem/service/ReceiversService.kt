@@ -12,12 +12,13 @@ import android.util.Log
 import android.widget.RemoteViews
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.core.app.NotificationCompat
-import com.example.core.util.AudioManager
+import com.example.core.device.manager.AudioManager
 import com.example.hevnotificationsystem.R
 import com.example.hevnotificationsystem.activity.MainActivity
-import com.example.hevnotificationsystem.receiver.battery.BatteryReceiver
-import com.example.hevnotificationsystem.receiver.battery.ChargeReceiver
-import com.example.hevnotificationsystem.receiver.mute.ToggleMuteReceiver
+import com.example.core.device.receiver.HEVReceiver
+import com.example.core.device.receiver.battery.BatteryReceiver
+import com.example.core.device.receiver.battery.ChargeReceiver
+import com.example.core.device.receiver.mute.ToggleMuteReceiver
 import java.util.*
 
 @ExperimentalAnimationApi
@@ -27,14 +28,14 @@ class ReceiversService: Service() {
     private var timer: Timer? = null
     private var wakeLock: PowerManager.WakeLock? = null
 
-    private val receivers = arrayListOf(
-        BatteryReceiver().also {
+    private val receivers = mapOf<String, HEVReceiver>(
+        BatteryReceiver.KEY to BatteryReceiver().also {
             BatteryReceiver.audioManager = audioManager
         },
-        ChargeReceiver().also {
+        ChargeReceiver.KEY to ChargeReceiver().also {
             ChargeReceiver.audioManager = audioManager
         },
-        ToggleMuteReceiver().also {
+        ToggleMuteReceiver.KEY to ToggleMuteReceiver().also {
             ToggleMuteReceiver.audioManager = audioManager
         }
     )
@@ -84,22 +85,11 @@ class ReceiversService: Service() {
     }
 
     private fun registerReceivers() {
-        applicationContext.apply {
-            receivers.forEach { receiver ->
-                registerReceiver(
-                    receiver,
-                    IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-                )
-            }
-
-            /*registerReceiver(
-                chargeReceiver,
-                IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+        receivers.forEach { receiverMap ->
+            applicationContext.registerReceiver(
+                receiverMap.value.broadcastReceiver,
+                IntentFilter(receiverMap.value.action)
             )
-            registerReceiver(
-                toggleMuteReceiver,
-                IntentFilter(VOLUME_CHANGED_ACTION)
-            )*/
         }
     }
 
@@ -112,11 +102,7 @@ class ReceiversService: Service() {
         }
         stopTimer()
 
-        applicationContext.apply {
-//            unregisterReceiver(batteryReceiver)
-//            unregisterReceiver(chargeReceiver)
-//            unregisterReceiver(toggleMuteReceiver)
-        }
+        unregisterReceivers()
 
         if (isServiceRunning) {
             audioManager.playSound(applicationContext, R.raw.hev_shutdown)
@@ -124,6 +110,12 @@ class ReceiversService: Service() {
         }
         else
             audioManager.playLastAndStop(applicationContext, R.raw.deactivated)
+    }
+
+    private fun unregisterReceivers() {
+        receivers.forEach { receiverMap ->
+            applicationContext.unregisterReceiver(receiverMap.value.broadcastReceiver)
+        }
     }
 
     private fun createNotificationChannel() {
@@ -179,7 +171,6 @@ class ReceiversService: Service() {
         private const val CHANNEL_NAME = "ReceiversService"
         private const val CHANNEL_ID = "HEVServiceChannel"
 
-        const val VOLUME_CHANGED_ACTION = "android.media.VOLUME_CHANGED_ACTION"
         const val RESTART_ACTION = "com.example.hevnotificationsystem.service.Restart"
 
         var isServiceRunning = false

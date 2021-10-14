@@ -1,4 +1,4 @@
-package com.example.core.util
+package com.example.core.device.manager
 
 import android.content.Context
 import android.media.MediaPlayer

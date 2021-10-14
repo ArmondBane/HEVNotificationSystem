@@ -3,7 +3,8 @@ package com.example.main.ui
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.core.util.UserManager
+import com.example.core.device.manager.UserManager
+import com.example.core.device.receiver.HEVReceiver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -17,8 +18,8 @@ class MainViewModel @Inject constructor(
 
     val receivers = userManager.receivers
 
-    fun onToggleReceiver(receiver: UserManager.HEVReceiver) {
-        userManager.toggleReceiver(receiver)
+    fun onToggleReceiver(receiverKey: String) {
+        userManager.toggleReceiver(receiverKey)
     }
 
     private val eventChannel = Channel<Event>()

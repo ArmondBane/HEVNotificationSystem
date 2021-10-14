@@ -1,7 +1,8 @@
-package com.example.core.util
+package com.example.core.device.manager
 
 import com.example.core.data.local.RECEIVERS_KEY
 import com.example.core.data.local.Storage
+import com.example.core.device.receiver.HEVReceiver
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,12 +13,14 @@ class UserManager @Inject constructor(
 
     val receivers = storage.getParcelable(RECEIVERS_KEY, Array<String>::class.java)
 
-    fun toggleReceiver(receiver: HEVReceiver) {
-        storage.setBoolean(
-            receiver.name,
-            !storage.getBoolean(receiver.name)
-        )
-    }
+    fun toggleReceiver(receiverKey: String) {
+        val oldValue = storage.getBoolean(receiverKey)
 
-    class HEVReceiver(val name: String)
+        storage.setBoolean(
+            receiverKey,
+            !oldValue
+        )
+
+
+    }
 }

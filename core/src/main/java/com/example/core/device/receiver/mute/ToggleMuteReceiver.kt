@@ -1,16 +1,19 @@
-package com.example.hevnotificationsystem.receiver.mute
+package com.example.core.device.receiver.mute
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.compose.animation.ExperimentalAnimationApi
+import com.example.core.R
 import android.media.AudioManager as SystemAudioManager
-import com.example.core.util.AudioManager
-import com.example.hevnotificationsystem.R
-import com.example.hevnotificationsystem.service.ReceiversService.Companion.VOLUME_CHANGED_ACTION
+import com.example.core.device.manager.AudioManager
+import com.example.core.device.receiver.HEVReceiver
 
-@ExperimentalAnimationApi
-class ToggleMuteReceiver: BroadcastReceiver() {
+class ToggleMuteReceiver(
+    override val receiverKey: String = KEY,
+    override val action: String = VOLUME_CHANGED_ACTION
+) : BroadcastReceiver(), HEVReceiver {
+
+    override val broadcastReceiver: BroadcastReceiver = this
 
     override fun onReceive(context: Context?, intent: Intent?) {
 
@@ -43,5 +46,7 @@ class ToggleMuteReceiver: BroadcastReceiver() {
     companion object {
         private var isSystemWasMute = true
         var audioManager: AudioManager? = null
+        const val VOLUME_CHANGED_ACTION = "android.media.VOLUME_CHANGED_ACTION"
+        const val KEY = "ToggleMuteReceiver"
     }
 }

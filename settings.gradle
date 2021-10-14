@@ -9,4 +9,4 @@ dependencyResolutionManagement {
 rootProject.name = "HEV Notification System"
 include ':app'
 include ':core'
-include ':presentation:main'
+include ':features:main'

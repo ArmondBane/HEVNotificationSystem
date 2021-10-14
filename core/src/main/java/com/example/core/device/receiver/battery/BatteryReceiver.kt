@@ -1,15 +1,20 @@
-package com.example.hevnotificationsystem.receiver.battery
+package com.example.core.device.receiver.battery
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.BatteryManager
-import com.example.core.util.AudioManager
-import com.example.hevnotificationsystem.R
-import com.example.hevnotificationsystem.receiver.HEVReceiver
+import com.example.core.R
+import com.example.core.device.manager.AudioManager
+import com.example.core.device.receiver.HEVReceiver
 
 
-class BatteryReceiver: BroadcastReceiver() {
+class BatteryReceiver(
+    override val receiverKey: String = KEY,
+    override val action: String = Intent.ACTION_BATTERY_CHANGED,
+) : BroadcastReceiver(), HEVReceiver {
+
+    override val broadcastReceiver: BroadcastReceiver = this
 
     override fun onReceive(context: Context?, intent: Intent?) {
 
@@ -77,5 +82,6 @@ class BatteryReceiver: BroadcastReceiver() {
 
     companion object {
         var audioManager: AudioManager? = null
+        const val KEY = "BatteryReceiver"
     }
 }
