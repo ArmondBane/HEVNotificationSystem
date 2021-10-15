@@ -11,7 +11,7 @@ class UserManager @Inject constructor(
     private val storage: Storage
 ) {
 
-    val receivers = storage.getParcelable(RECEIVERS_KEY, Array<String>::class.java)
+    val receivers = storage.getParcelable(RECEIVERS_KEY, Map::class.java)
 
     fun toggleReceiver(receiverKey: String) {
         val oldValue = storage.getBoolean(receiverKey)

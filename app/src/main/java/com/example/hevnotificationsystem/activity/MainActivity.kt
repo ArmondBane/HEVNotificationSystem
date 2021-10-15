@@ -35,7 +35,9 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startReceiversService() {
-        val serviceIntent = Intent(applicationContext, ReceiversService::class.java)
+        val serviceIntent = Intent(applicationContext, ReceiversService::class.java).apply {
+            action = ReceiversService.START_ACTION
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             applicationContext.startForegroundService(serviceIntent)
         else

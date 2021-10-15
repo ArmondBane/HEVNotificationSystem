@@ -12,6 +12,8 @@ import android.util.Log
 import android.widget.RemoteViews
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.core.app.NotificationCompat
+import com.example.core.data.local.APP_SHARED_PREFERENCES_FILE
+import com.example.core.data.local.RECEIVERS_KEY
 import com.example.core.device.manager.AudioManager
 import com.example.hevnotificationsystem.R
 import com.example.hevnotificationsystem.activity.MainActivity
@@ -19,7 +21,10 @@ import com.example.core.device.receiver.HEVReceiver
 import com.example.core.device.receiver.battery.BatteryReceiver
 import com.example.core.device.receiver.battery.ChargeReceiver
 import com.example.core.device.receiver.mute.ToggleMuteReceiver
+import com.google.gson.Gson
+import java.lang.Exception
 import java.util.*
+import kotlin.math.acos
 
 @ExperimentalAnimationApi
 class ReceiversService: Service() {
@@ -40,6 +45,8 @@ class ReceiversService: Service() {
         }
     )
 
+    private val receiversValues = getSavedReceiversValues()?.toMutableMap()
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
@@ -55,18 +62,47 @@ class ReceiversService: Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
+        when (intent?.action) {
+            START_ACTION -> startService()
+            EDIT_ACTION -> editService(
+                intent.getStringExtra("key"),
+                intent.getBooleanExtra(intent.getStringExtra("key"), true)
+            )
+        }
+
+        return START_STICKY
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        wakeLock?.apply {
+            if (isHeld)
+                release()
+        }
+        stopTimer()
+
+        unregisterReceivers()
+
+        if (isServiceRunning) {
+            audioManager.playSound(applicationContext, R.raw.hev_shutdown)
+            sendBroadcast(Intent(RESTART_ACTION))
+        } else
+            audioManager.playLastAndStop(applicationContext, R.raw.deactivated)
+    }
+
+    private fun startService() {
         isServiceRunning = true
 
-        wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
+        wakeLock = (getSystemService(POWER_SERVICE) as PowerManager).run {
             newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ReceiversService::lock").apply {
-                acquire(24*60*60*1000L /*24 hours*/)
+                acquire(24 * 60 * 60 * 1000L /*24 hours*/)
             }
         }
 
         startTimer()
         registerReceivers()
-
-        return START_STICKY
+        updateReceiversValues()
     }
 
     private fun startTimer() {
@@ -84,37 +120,43 @@ class ReceiversService: Service() {
         }
     }
 
+    private fun editService(key: String?, vale: Boolean) {
+
+    }
+
     private fun registerReceivers() {
         receivers.forEach { receiverMap ->
-            applicationContext.registerReceiver(
-                receiverMap.value.broadcastReceiver,
-                IntentFilter(receiverMap.value.action)
-            )
+
+            if (receiversValues?.containsKey(receiverMap.key) == false)
+                receiversValues[receiverMap.key] = true
+
+            if (receiversValues?.get(receiverMap.key) == true)
+                applicationContext.registerReceiver(
+                    receiverMap.value.broadcastReceiver,
+                    IntentFilter(receiverMap.value.action)
+                )
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    private fun updateReceiversValues() {
 
-        wakeLock?.apply {
-            if (isHeld)
-                release()
-        }
-        stopTimer()
-
-        unregisterReceivers()
-
-        if (isServiceRunning) {
-            audioManager.playSound(applicationContext, R.raw.hev_shutdown)
-            sendBroadcast(Intent(RESTART_ACTION))
-        }
-        else
-            audioManager.playLastAndStop(applicationContext, R.raw.deactivated)
     }
 
     private fun unregisterReceivers() {
         receivers.forEach { receiverMap ->
             applicationContext.unregisterReceiver(receiverMap.value.broadcastReceiver)
+        }
+    }
+
+    private fun getSavedReceiversValues(): Map<String, Boolean>? {
+        val sharedPreferences = applicationContext
+            .getSharedPreferences(APP_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE)
+
+        val data = sharedPreferences.getString("p_$RECEIVERS_KEY", "")!!
+        return try {
+            Gson().fromJson(data, Map::class.java) as Map<String, Boolean>?
+        } catch (ex: Exception) {
+            null
         }
     }
 
@@ -172,6 +214,8 @@ class ReceiversService: Service() {
         private const val CHANNEL_ID = "HEVServiceChannel"
 
         const val RESTART_ACTION = "com.example.hevnotificationsystem.service.Restart"
+        const val START_ACTION = "com.example.hevnotificationsystem.service.Start"
+        const val EDIT_ACTION = "com.example.hevnotificationsystem.service.Edit"
 
         var isServiceRunning = false
     }

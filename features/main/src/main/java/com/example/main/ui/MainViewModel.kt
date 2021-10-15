@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.device.manager.UserManager
 import com.example.core.device.receiver.HEVReceiver
+import com.example.core.domain.usecase.GetReceiversUseCase
+import com.example.core.domain.usecase.ToggleReceiverUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -13,13 +15,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val userManager: UserManager
+    private val getReceiversUseCase: GetReceiversUseCase,
+    private val toggleReceiverUseCase: ToggleReceiverUseCase
 ) :ViewModel(), LifecycleObserver {
 
-    val receivers = userManager.receivers
+    val receivers = getReceiversUseCase()
 
     fun onToggleReceiver(receiverKey: String) {
-        userManager.toggleReceiver(receiverKey)
+        toggleReceiverUseCase(receiverKey)
     }
 
     private val eventChannel = Channel<Event>()
